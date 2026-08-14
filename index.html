@@ -1,1177 +1,560 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>BOOYAH Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOYAH DAY & STUDIO - Official Platform</title>
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        html, body {
-            overflow-x: hidden !important;
-            overscroll-behavior-y: none;
-            overscroll-behavior-x: none;
-            width: 100%;
-            max-width: 100vw;
-            position: relative;
-            background-color: #0f0f0f;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
         }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .card-bg { background-color: #212121; }
-        .card-border { border-color: rgba(255, 255, 255, 0.1); }
-        .booyah-orange { color: #FF6B00; }
-        .bg-booyah-orange { background-color: #FF6B00; }
+
+        :root {
+            --primary-orange: #ff5500;
+            --gold: #ffb400;
+            --bg-dark: #0a0c10;
+            --card-dark: #141824;
+            --text-light: #f0f2f5;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Utility Classes for Page Transition */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== 1. LANDING PAGE STYLING ==================== */
+        .hero-banner {
+            position: relative;
+            background: linear-gradient(180deg, rgba(10,12,16,0.3) 0%, var(--bg-dark) 100%), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=80') center/cover;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--primary-orange);
+        }
+
+        .hero-logo {
+            width: 95px;
+            height: 95px;
+            border-radius: 22px;
+            box-shadow: 0 0 25px rgba(255, 85, 0, 0.7);
+            border: 2px solid var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .hero-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 46px;
+            letter-spacing: 2px;
+            color: #fff;
+            text-transform: uppercase;
+            text-shadow: 0 0 12px rgba(255, 85, 0, 0.9);
+            line-height: 1;
+        }
+
+        .hero-subtitle {
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 180, 0, 0.3);
+        }
+
+        /* Stacked Buttons Layout (Upore-Niche) */
+        .cta-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 360px;
+            justify-content: center;
+        }
+
+        .landing-cta-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-orange), var(--gold));
+            color: #000;
+            font-family: 'Teko', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 180, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .landing-cta-btn.studio-btn {
+            background: linear-gradient(45deg, #00c853, #00e676);
+            box-shadow: 0 0 15px rgba(0, 200, 83, 0.5);
+        }
+
+        .landing-cta-btn:hover {
+            transform: scale(1.03);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 25px 20px;
+        }
+
+        .feature-card {
+            background: var(--card-dark);
+            padding: 16px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .feature-card i {
+            font-size: 30px;
+            color: var(--primary-orange);
+            margin-bottom: 8px;
+        }
+
+        .feature-card h3 {
+            font-size: 15px;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .feature-card p {
+            font-size: 12px;
+            color: #a0a5b5;
+        }
+
+        /* ==================== 2. STORE COMMON STYLING ==================== */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: var(--card-dark);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .store-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Teko', sans-serif;
+            font-size: 24px;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .store-container {
+            padding: 20px;
+        }
+
+        .app-header {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .store-app-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 2px solid var(--primary-orange);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .developer-name {
+            color: #a0a5b5;
+            font-weight: 500;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .app-category {
+            font-size: 13px;
+            color: var(--gold);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .app-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            padding: 12px 0;
+            background: var(--card-dark);
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #a0a5b5;
+            margin-top: 3px;
+        }
+
+        .install-btn {
+            background: linear-gradient(90deg, #00c853, #00e676);
+            color: #000;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+            color: var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 7 Screenshots Scrollable Gallery */
+        .screenshots-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 10px;
+        }
+
+        .screenshots-container::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .screenshots-container::-webkit-scrollbar-thumb {
+            background: var(--primary-orange);
+            border-radius: 10px;
+        }
+
+        .screenshot-img {
+            height: 230px;
+            width: auto;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            object-fit: cover;
+        }
+
+        /* About Section Custom Styling */
+        .about-card {
+            background: var(--card-dark);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.7;
+        }
+
+        .about-text {
+            font-size: 14px;
+            color: #d1d5db;
+            margin-bottom: 12px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            font-size: 13.5px;
+            color: #a0a5b5;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .feature-list li i {
+            color: var(--gold);
+            margin-top: 4px;
+            font-size: 12px;
+        }
     </style>
 </head>
-<body class="overflow-x-hidden min-h-screen flex flex-col justify-between select-none">
+<body>
 
-    <!-- FLASH / SPLASH SCREEN -->
-    <div id="flash-screen" class="fixed inset-0 bg-[#0f0f0f] z-50 flex flex-col items-center justify-center transition-all duration-500">
-        <img src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/App%20logo.webp" class="w-24 h-24 object-contain rounded-2xl border border-gray-800 p-1 bg-black shadow-lg animate-pulse">
-        <div class="mt-4 flex items-center gap-1.5">
-            <div class="w-2.5 h-2.5 rounded-full bg-[#FF6B00] animate-bounce"></div>
-            <div class="w-2.5 h-2.5 rounded-full bg-[#FF6B00] animate-bounce [animation-delay:0.2s]"></div>
-            <div class="w-2.5 h-2.5 rounded-full bg-[#FF6B00] animate-bounce [animation-delay:0.4s]"></div>
+    <!-- ================= 1. MAIN LANDING PAGE ================= -->
+    <div id="landing-page" class="page active">
+        <div class="hero-banner">
+            <img class="hero-logo" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1780895681243_CompressJPEG.Online_img_512x512_.webp" alt="BOOYAH DAY Logo">
+            <h1 class="hero-title">BOOYAH PLATFORM</h1>
+            <p class="hero-subtitle">BY SZ DEV STUDIO</p>
+            
+            <!-- Stacked Buttons Layout -->
+            <div class="cta-button-group">
+                <button class="landing-cta-btn" onclick="openPage('booyah-day-page')">
+                    <i class="fa-solid fa-download"></i> DOWNLOAD APP
+                </button>
+                <button class="landing-cta-btn studio-btn" onclick="openPage('booyah-studio-page')">
+                    <i class="fa-solid fa-clapperboard"></i> BOOYAH STUDIO
+                </button>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fa-solid fa-users"></i>
+                <h3>Social Community</h3>
+                <p>Chat & make new Free Fire friends.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-gem"></i>
+                <h3>Free Diamonds</h3>
+                <p>Complete tasks & win real diamonds.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-video"></i>
+                <h3>Creator Studio</h3>
+                <p>Upload videos & monetize content.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-gift"></i>
+                <h3>Diamond Gifts</h3>
+                <p>Receive live diamond income.</p>
+            </div>
         </div>
     </div>
 
-    <!-- LOGIN SCREEN -->
-    <div id="studio-login-screen" class="hidden w-full max-w-sm card-bg border card-border rounded-3xl p-6 shadow-2xl space-y-4 my-auto mx-auto text-center">
-        <div class="w-16 h-16 bg-[#FF6B00]/10 border-2 border-[#FF6B00] rounded-full flex items-center justify-center mx-auto text-2xl">🎬</div>
-        <h2 class="text-lg font-black text-[#FF6B00] uppercase tracking-wider">CREATOR STUDIO LOGIN</h2>
-        <form onsubmit="handleStudioLogin(event)" class="space-y-3 pt-2 text-left">
-            <div>
-                <label class="text-[10px] font-bold text-gray-400 block mb-1">REGISTERED EMAIL</label>
-                <input type="email" id="login-email" placeholder="gamer@booyah.com" required class="w-full bg-[#121212] border border-gray-700 text-white font-bold text-xs p-3.5 rounded-xl outline-none focus:border-[#FF6B00]">
+    <!-- ================= 2. BOOYAH DAY STORE PAGE ================= -->
+    <div id="booyah-day-page" class="page">
+        <!-- Store Top Navbar -->
+        <header>
+            <button class="back-btn" onclick="openPage('landing-page')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="store-brand">
+                <i class="fa-solid fa-fire-flame-curved" style="color: var(--primary-orange);"></i> BOOYAH STORE
             </div>
-            <div>
-                <label class="text-[10px] font-bold text-gray-400 block mb-1">PASSWORD</label>
-                <input type="password" id="login-password" placeholder="••••••••" required class="w-full bg-[#121212] border border-gray-700 text-white font-mono font-bold text-xs p-3.5 rounded-xl outline-none focus:border-[#FF6B00]">
-            </div>
-            <button type="submit" id="btn-studio-login" class="w-full py-3.5 bg-gradient-to-r from-[#FF6B00] to-[#FF8C00] text-black font-black text-xs uppercase tracking-widest rounded-xl shadow-lg active:scale-95 transition">
-                VERIFY & ENTER STUDIO 🚀
-            </button>
-        </form>
-    </div>
-
-    <!-- MAIN STUDIO WRAPPER -->
-    <div id="studio-main-app" class="hidden w-full flex-1 flex flex-col max-w-2xl mx-auto min-h-screen relative">
-        
-        <!-- FIXED STUDIO HEADER BAR -->
-        <header class="w-full bg-[#0f0f0f] border-b card-border px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-md">
-            <!-- Left Logo + Studio Text (FIXED Studio ALWAYS) -->
-            <div class="flex items-center gap-2">
-                <img src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/App%20logo.webp" class="w-8 h-8 object-contain rounded-xl border border-gray-800 p-0.5 bg-black shadow-sm">
-                <span class="font-black text-xl text-[#FF6B00] tracking-wider uppercase">Studio</span>
-            </div>
-
-            <!-- Right Action Icons (+ Sleek Gradient Upload Button, Profile Avatar) -->
-            <div class="flex items-center gap-3">
-                <button onclick="openUploadScreen()" class="w-9 h-9 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FF8C00] text-black font-black text-xl flex items-center justify-center shadow-[0_0_12px_rgba(255,107,0,0.4)] active:scale-90 transition shrink-0" title="Upload Video">
-                    +
-                </button>
-                <img id="header-creator-avatar" src="images/avatar/default_male.webp" class="w-8 h-8 rounded-full object-cover border border-gray-600 bg-black">
-            </div>
+            <i class="fa-solid fa-magnifying-glass" style="color: #a0a5b5;"></i>
         </header>
 
-        <!-- MAIN VIEWS CONTAINER WITH EXTRA BOTTOM PADDING -->
-        <main class="flex-1 w-full p-4 overflow-y-auto no-scrollbar flex flex-col justify-between">
+        <div class="store-container">
+            <!-- App Logo and Details -->
+            <div class="app-header">
+                <img class="store-app-icon" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1780895681243_CompressJPEG.Online_img_512x512_.webp" alt="BOOYAH DAY Logo">
+                <div>
+                    <h1 class="app-title">BOOYAH DAY</h1>
+                    <div class="developer-name">SZ DEV STUDIO</div>
+                    <div class="app-category"><i class="fa-solid fa-circle-check"></i> FF Social Community</div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="app-stats">
+                <div class="stat-item">
+                    <div class="stat-value">4.9 <i class="fa-solid fa-star" style="font-size: 11px;"></i></div>
+                    <div class="stat-label">Rating</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">20 MB+</div>
+                    <div class="stat-label">Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">250+</div>
+                    <div class="stat-label">Downloads</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">12+</div>
+                    <div class="stat-label">Age Rating</div>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <a href="https://pub-c1d2243de4aa4fa68b3cd8f424e910a3.r2.dev/Apks/Booyah%20Day.apk" class="install-btn" download>
+                <i class="fa-solid fa-download"></i> Install App
+            </a>
+
+            <!-- 7 Screenshots Section -->
+            <div class="section-title">
+                <span>Screenshots (7)</span>
+            </div>
             
-            <!-- SECTION 1: DASHBOARD TAB -->
-            <div id="sec-dashboard" class="flex flex-col h-full space-y-4">
-                
-                <!-- FIXED TOP DASHBOARD HEADER & ANALYTICS -->
-                <div class="space-y-4 shrink-0">
-                    <!-- CHANNEL PROFILE SUMMARY HEADER -->
-                    <div class="w-full py-1 flex items-center gap-4 text-left">
-                        <img id="channel-avatar" src="images/avatar/default_male.webp" class="w-16 h-16 rounded-2xl object-cover border-2 border-[#FF6B00] shadow-md bg-black shrink-0">
-                        <div class="flex flex-col min-w-0">
-                            <div class="flex items-center gap-1.5 flex-wrap">
-                                <h2 id="channel-name" class="font-black text-lg text-white uppercase truncate">SHEZIN BOY</h2>
-                                <span id="channel-badge-container"></span>
-                            </div>
-                            <span id="channel-followers-num" class="text-base font-mono font-black text-white mt-0.5">0</span>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total followers</span>
-                        </div>
-                    </div>
-
-                    <!-- Channel Analytics (All Time) Card -->
-                    <div class="card-bg border card-border rounded-2xl p-4 space-y-3 shadow-md">
-                        <div class="flex items-center justify-between border-b card-border pb-2">
-                            <h3 class="font-black text-sm text-white uppercase tracking-wider">Channel analytics</h3>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">All time</span>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3 pt-1">
-                            <div class="bg-[#121212] p-3.5 rounded-xl border border-gray-800">
-                                <span class="text-[10px] font-bold text-gray-400 block mb-1">Views</span>
-                                <span id="stat-total-views" class="text-2xl font-mono font-black text-white">0</span>
-                            </div>
-                            <div class="bg-[#121212] p-3.5 rounded-xl border border-gray-800">
-                                <span class="text-[10px] font-bold text-gray-400 block mb-1">Likes</span>
-                                <span id="stat-total-likes" class="text-2xl font-mono font-black text-[#FF6B00]">0</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SCROLLABLE TOP 3 VIRAL CONTENT WITH BOTTOM GAP -->
-                <div class="flex-1 flex flex-col space-y-3 min-h-0 pt-2">
-                    <h3 class="font-black text-sm text-white uppercase tracking-wider px-1 shrink-0">Top 3 viral content 🔥</h3>
-                    <div id="dashboard-viral-container" class="space-y-3 overflow-y-auto no-scrollbar pb-32">
-                        <div class="text-center py-8 text-xs font-bold text-gray-500">Loading viral content...</div>
-                    </div>
-                </div>
-
+            <div class="screenshots-container">
+                <img class="screenshot-img" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786664974856_IMG_20260813_212840.jpg" alt="Screenshot 1">
+                <img class="screenshot-img" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786664990576_IMG_20260813_212826.jpg" alt="Screenshot 2">
+                <img class="screenshot-img" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786665019875_IMG_20260813_205512.jpg" alt="Screenshot 3">
+                <img class="screenshot-img" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786664998027_IMG_20260813_212812.jpg" alt="Screenshot 4">
+                <img class="screenshot-img" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786665012741_IMG_20260813_212718.jpg" alt="Screenshot 5">
+                <img class="screenshot-img" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786665006437_IMG_20260813_212745.jpg" alt="Screenshot 6">
+                <img class="screenshot-img" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786664941241_IMG_20260813_213101.jpg" alt="Screenshot 7">
             </div>
 
-            <!-- SECTION 2: CONTENT TAB (MY VIDEOS) -->
-            <div id="sec-content" class="hidden space-y-3 pb-32">
-                <div class="flex items-center justify-between px-1 border-b card-border pb-2">
-                    <h3 class="font-black text-sm text-white uppercase tracking-wider">Videos (<span id="content-video-count">0</span>)</h3>
-                    <button onclick="openUploadScreen()" class="px-3.5 py-1.5 bg-gradient-to-r from-[#FF6B00] to-[#FF8C00] text-black font-black text-xs uppercase rounded-xl shadow active:scale-95 transition">
-                        + UPLOAD
-                    </button>
-                </div>
-
-                <div id="content-videos-list" class="space-y-3"></div>
+            <!-- About Section in Bangla -->
+            <div class="section-title">
+                <span>About BOOYAH DAY</span>
             </div>
-
-            <!-- SECTION 3: MONETIZE TAB -->
-            <div id="sec-monetize" class="hidden space-y-4 pb-32">
-                
-                <!-- IF MONETIZED (UNLOCKED) -->
-                <div id="monetize-unlocked-view" class="hidden space-y-4">
-                    <!-- Revenue Overview Card -->
-                    <div class="card-bg border card-border rounded-2xl p-5 shadow-lg space-y-3">
-                        <div class="flex items-center justify-between border-b card-border pb-2">
-                            <h3 class="font-black text-sm text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                                <span>💰</span> ESTIMATED REVENUE
-                            </h3>
-                            <span class="text-[9px] font-bold text-emerald-400 bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded uppercase">MONETIZED ✓</span>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-2 pt-1 text-center">
-                            <div class="bg-[#121212] p-2.5 rounded-xl border border-gray-800">
-                                <span class="text-[9px] font-bold text-gray-400 block uppercase">TODAY</span>
-                                <span id="earning-today" class="text-sm font-mono font-black text-emerald-400 mt-1 block">৳0.00</span>
-                            </div>
-                            <div class="bg-[#121212] p-2.5 rounded-xl border border-gray-800">
-                                <span class="text-[9px] font-bold text-gray-400 block uppercase">LAST 3 DAYS</span>
-                                <span id="earning-3days" class="text-sm font-mono font-black text-amber-400 mt-1 block">৳0.00</span>
-                            </div>
-                            <div class="bg-[#121212] p-2.5 rounded-xl border border-gray-800">
-                                <span class="text-[9px] font-bold text-gray-400 block uppercase">TOTAL</span>
-                                <span id="earning-total" class="text-sm font-mono font-black text-white mt-1 block">৳0.00</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Top 3 Most Earning Videos -->
-                    <div class="space-y-3">
-                        <h3 class="font-black text-sm text-white uppercase tracking-wider px-1">Top 3 Most Earning Videos 💎</h3>
-                        <div id="monetize-top-earning-container" class="space-y-3">
-                            <div class="text-center py-6 text-xs font-bold text-gray-500">Loading top earning videos...</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- IF LOCKED (REQUIREMENTS NOT MET) -->
-                <div id="monetize-locked-view" class="card-bg border card-border rounded-2xl p-5 shadow-lg text-center space-y-4">
-                    <div class="w-14 h-14 bg-red-500/10 border-2 border-red-500 rounded-full flex items-center justify-center mx-auto text-2xl">🔒</div>
-                    <h3 class="font-black text-base text-red-500 uppercase tracking-wider">MONETIZATION LOCKED</h3>
-                    <p class="text-xs text-gray-300 font-medium leading-relaxed max-w-sm mx-auto">
-                        Complete the requirements to unlock video monetization and earn revenue from your views & likes!
-                    </p>
-
-                    <!-- Requirements Progress -->
-                    <div class="space-y-3 text-left bg-[#121212] p-4 rounded-xl border border-gray-800">
-                        <div>
-                            <div class="flex justify-between text-xs font-bold mb-1">
-                                <span class="text-gray-300">1. Followers (Min 150)</span>
-                                <span id="req-followers-text" class="text-[#FF6B00] font-mono">0 / 150</span>
-                            </div>
-                            <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div id="req-followers-bar" class="h-full bg-[#FF6B00] transition-all duration-300" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-xs font-bold mb-1">
-                                <span class="text-gray-300">2. All-Time Likes (Min 50)</span>
-                                <span id="req-likes-text" class="text-amber-400 font-mono">0 / 50</span>
-                            </div>
-                            <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div id="req-likes-bar" class="h-full bg-amber-400 transition-all duration-300" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- SECTION 4: SETTINGS & LOGOUT TAB -->
-            <div id="sec-settings" class="hidden space-y-4 pb-32">
-                
-                <!-- REDESIGNED CREATOR PROFILE CARD -->
-                <div class="card-bg border card-border rounded-3xl p-5 shadow-xl space-y-4">
-                    <div class="flex items-center gap-4 border-b card-border pb-4">
-                        <img id="settings-creator-avatar" src="images/avatar/default_male.webp" class="w-16 h-16 rounded-2xl object-cover border-2 border-[#FF6B00] shadow-md bg-black shrink-0">
-                        <div class="flex flex-col min-w-0 text-left">
-                            <div class="flex items-center gap-1.5 flex-wrap">
-                                <h2 id="settings-creator-name" class="font-black text-base text-white uppercase truncate">SHEZIN BOY</h2>
-                                <span id="settings-badge-container"></span>
-                            </div>
-                            <span class="text-[10px] font-mono font-bold text-emerald-400 mt-1 uppercase flex items-center gap-1">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                Active Creator Account
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2.5 text-xs font-bold">
-                        <div class="flex justify-between py-2 border-b border-gray-800/80">
-                            <span class="text-gray-400">Email:</span>
-                            <span id="setting-email" class="text-white font-mono">---</span>
-                        </div>
-                        <div class="flex justify-between py-2 border-b border-gray-800/80">
-                            <span class="text-gray-400">UID:</span>
-                            <span id="setting-uid" class="text-[#FF6B00] font-mono">---</span>
-                        </div>
-                        <div class="flex justify-between py-2 border-b border-gray-800/80">
-                            <span class="text-gray-400">Monetization Status:</span>
-                            <span id="setting-monetize-status" class="text-gray-400 uppercase">LOCKED 🔒</span>
-                        </div>
-                        <div class="flex justify-between py-2">
-                            <span class="text-gray-400">Studio Version:</span>
-                            <span class="text-gray-300 font-mono">v1.1</span>
-                        </div>
-                    </div>
-
-                    <!-- MODERN LOGOUT BUTTON -->
-                    <div class="pt-2">
-                        <button onclick="logoutCreatorStudio()" class="w-full py-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl active:scale-95 transition flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
-                            <span>LOGOUT CREATOR STUDIO</span>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- SECTION 5: DEDICATED FULL SCREEN VIDEO UPLOAD (NO HEADER POPUP) -->
-            <div id="sec-upload" class="hidden space-y-4 pb-32">
-                <div class="w-full space-y-4 text-left">
-                    
-                    <!-- Top Back Navigation Arrow -->
-                    <div class="flex items-center justify-between pb-1">
-                        <button onclick="closeUploadScreen()" class="px-3.5 py-2 rounded-xl bg-[#272727] text-white font-bold flex items-center gap-1.5 hover:bg-gray-700 transition active:scale-95 shadow text-xs uppercase">
-                            ← BACK TO DASHBOARD
-                        </button>
-                    </div>
-
-                    <!-- 1st BOX (TOP): SELECT VIDEO FILE + LIVE PREVIEW -->
-                    <div id="box-file-upload">
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1">SELECT VIDEO FILE (MAX 20 MB • MP4 ONLY)</label>
-                        <input type="file" id="studio-file-input" accept="video/mp4,video/*" class="hidden" onchange="previewVideoFile(this)">
-                        <button type="button" onclick="document.getElementById('studio-file-input').click()" class="w-full py-6 bg-[#121212] border-2 border-dashed border-[#FF6B00]/50 rounded-2xl flex flex-col items-center justify-center gap-2 text-xs font-bold text-[#FF6B00] hover:border-[#FF6B00] transition shadow-inner">
-                            <span class="text-2xl">🎬</span>
-                            <span id="video-label-text">CLICK TO SELECT VIDEO FILE (MAX 20 MB)</span>
-                        </button>
-                        <!-- Video Live Preview Inside Box -->
-                        <div class="mt-3 flex justify-center">
-                            <video id="video-preview-el" controls class="hidden w-full max-h-56 rounded-2xl bg-black border border-gray-700 shadow-xl"></video>
-                        </div>
-                    </div>
-
-                    <!-- 2nd BOX: VIDEO TITLE -->
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1">VIDEO TITLE</label>
-                        <input type="text" id="studio-title" placeholder="e.g. Free Fire 1v4 Solo vs Squad Clutch" class="w-full bg-[#121212] border border-gray-700 text-white text-xs px-3.5 py-3.5 rounded-xl font-bold outline-none focus:border-[#FF6B00]">
-                    </div>
-
-                    <!-- 3rd BOX: SELECT THUMBNAIL IMAGE + LIVE PREVIEW -->
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 block mb-1">SELECT THUMBNAIL IMAGE (MAX 1 MB • JPG/PNG/WEBP ONLY)</label>
-                        <input type="file" id="studio-thumb-input" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewThumbnail(this)">
-                        <button type="button" onclick="document.getElementById('studio-thumb-input').click()" class="w-full py-3.5 bg-[#121212] border-2 border-dashed border-cyan-500/40 rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-cyan-400 hover:border-cyan-400 transition">
-                            <span>🖼️</span> <span id="thumb-label-text">SELECT THUMBNAIL (MAX 1 MB)</span>
-                        </button>
-                        <!-- Thumbnail Live Preview Inside Box -->
-                        <div class="mt-3 flex justify-center">
-                            <img id="thumb-preview-img" src="" class="hidden w-44 h-28 object-contain rounded-xl border border-gray-700 shadow-lg bg-black">
-                        </div>
-                    </div>
-
-                    <!-- 4th BOX: VIDEO PRIVACY SELECTOR (PUBLIC vs PRIVATE) -->
-                    <div class="p-3.5 bg-[#121212] rounded-2xl border border-gray-800 space-y-2">
-                        <label class="text-[10px] font-bold text-amber-400 block uppercase">VIDEO PRIVACY SETTING:</label>
-                        <select id="studio-privacy" class="w-full bg-[#181818] border border-gray-700 text-white text-xs px-3 py-3 rounded-xl font-bold outline-none focus:border-[#FF6B00]">
-                            <option value="public">🌐 PUBLIC (Visible to All Users)</option>
-                            <option value="private">🔒 PRIVATE (Only Visible to Me)</option>
-                        </select>
-                    </div>
-
-                    <!-- Upload Progress Bar -->
-                    <div id="studio-progress-box" class="hidden space-y-1 pt-1">
-                        <div class="flex justify-between items-center text-[10px] font-mono font-bold">
-                            <span id="studio-status-text" class="text-[#FF6B00]">UPLOADING...</span>
-                            <span id="studio-pct-text" class="text-emerald-400">0%</span>
-                        </div>
-                        <div class="w-full h-2.5 bg-[#121212] rounded-full overflow-hidden border border-gray-800">
-                            <div id="studio-progress-bar" class="h-full w-0 bg-gradient-to-r from-[#FF6B00] via-amber-400 to-emerald-400 transition-all duration-200"></div>
-                        </div>
-                    </div>
-
-                    <button id="btn-studio-publish" onclick="publishVideoToFirestore()" class="w-full py-4 bg-gradient-to-r from-[#FF6B00] to-[#FF8C00] text-black font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl active:scale-95 transition mt-2">PUBLISH TO APP 🚀</button>
-                </div>
-            </div>
-
-        </main>
-
-        <!-- YOUTUBE STUDIO BOTTOM NAVIGATION BAR -->
-        <nav class="fixed bottom-0 inset-x-0 bg-[#0f0f0f] border-t card-border py-2.5 px-3 flex justify-around items-center z-30 max-w-2xl mx-auto shadow-2xl">
-            <button onclick="switchStudioTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center gap-1 text-[#FF6B00] transition font-bold">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-                <span class="text-[9px] font-black uppercase tracking-wider">Dashboard</span>
-            </button>
-            <button onclick="switchStudioTab('content')" id="nav-content" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
-                <span class="text-[9px] font-black uppercase tracking-wider">Content</span>
-            </button>
-            <button onclick="switchStudioTab('monetize')" id="nav-monetize" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-                <span class="text-[9px] font-black uppercase tracking-wider">Monetize</span>
-            </button>
-            <button onclick="switchStudioTab('settings')" id="nav-settings" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
-                <span class="text-[9px] font-black uppercase tracking-wider">Settings</span>
-            </button>
-        </nav>
-
-    </div>
-
-    <!-- EDIT VIDEO MODAL -->
-    <div id="modal-edit-video" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onclick="closeEditModal()">
-        <div class="bg-[#1e1e1e] border border-gray-700 w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-3 relative text-left" onclick="event.stopPropagation()">
-            <div class="flex items-center justify-between border-b card-border pb-2">
-                <h3 class="font-black text-sm text-[#FF6B00] uppercase tracking-wider">EDIT VIDEO DETAILS</h3>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-white font-bold">✕</button>
-            </div>
-
-            <input type="hidden" id="edit-video-id">
-
-            <div>
-                <label class="text-[10px] font-bold text-gray-400 block mb-1">VIDEO TITLE</label>
-                <input type="text" id="edit-title" class="w-full bg-[#121212] border border-gray-700 text-white text-xs px-3.5 py-2.5 rounded-xl font-bold outline-none focus:border-[#FF6B00]">
-            </div>
-
-            <div>
-                <label class="text-[10px] font-bold text-gray-400 block mb-1">REPLACE THUMBNAIL (MAX 1 MB • JPG/PNG/WEBP)</label>
-                <input type="file" id="edit-thumb-input" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewEditThumbnail(this)">
-                <button type="button" onclick="document.getElementById('edit-thumb-input').click()" class="w-full py-2.5 bg-[#121212] border-2 border-dashed border-cyan-500/40 rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-cyan-400">
-                    <span>🖼️</span> <span id="edit-thumb-label-text">CHOOSE NEW IMAGE</span>
-                </button>
-                <div class="mt-2 flex justify-center">
-                    <img id="edit-thumb-preview-img" src="" class="hidden w-36 h-20 object-contain rounded-xl border border-gray-700 shadow-lg bg-black">
-                </div>
-            </div>
-
-            <div class="flex gap-2 pt-2">
-                <button onclick="closeEditModal()" class="flex-1 py-3 bg-gray-800 text-gray-300 font-black text-xs uppercase rounded-xl">CANCEL</button>
-                <button onclick="saveVideoEdits()" id="btn-save-edit" class="flex-1 py-3 bg-gradient-to-r from-[#FF6B00] to-[#FF8C00] text-black font-black text-xs uppercase rounded-xl shadow-lg">SAVE CHANGES</button>
+            <div class="about-card">
+                <p class="about-text">
+                    <strong>BOOYAH DAY</strong> হলো ফ্রি ফায়ার গেমারদের জন্য তৈরি একটি দুর্দান্ত সোশ্যাল কমিউনিটি অ্যাপ! এখানে আপনি গেম খেলার পাশাপাশি নিজের কমিউনিটি তৈরি করতে পারবেন এবং আকর্ষণীয় উপহার জিতে নিতে পারবেন।
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-gem"></i> <span><strong>ফ্রেন্ডস ও চ্যাট:</strong> নতুন নতুন ফ্রি ফায়ার প্লেয়ারদের সাথে ফ্রেন্ডশিপ করুন এবং সরাসরি চ্যাট করুন।</span></li>
+                    <li><i class="fa-solid fa-gem"></i> <span><strong>ভিডিও ও ইনকাম:</strong> আপনার গেমপ্লে ভিডিও আপলোড করুন এবং ভিডিও শেয়ার করে টাকা আয় করার সুযোগ পান।</span></li>
+                    <li><i class="fa-solid fa-gem"></i> <span><strong>লাইভ স্ট্রিম:</strong> সহজে নিজের গেমপ্লে লাইভ স্ট্রিম করে আপনার ফ্যান বেস তৈরি করুন।</span></li>
+                    <li><i class="fa-solid fa-gem"></i> <span><strong>ফ্রি ডায়মন্ড জিতার সুযোগ:</strong> অ্যাপের বিভিন্ন টাস্ক পূরণ করে জিতে নিন ফ্রি ফায়ার রিয়েল ডায়মন্ড।</span></li>
+                    <li><i class="fa-solid fa-gem"></i> <span><strong>উইকলি মেম্বারশিপ:</strong> গেম খেলে একদম ফ্রিতে 'Weekly Lite' এবং 'Weekly Membership' অর্জনের সেরা সুযোগ!</span></li>
+                    <li><i class="fa-solid fa-gem"></i> <span><strong>১০,০০০ রেফার ডায়মন্ড:</strong> বন্ধুদের রেফার করে পান ১০,০০০ পর্যন্ত ডায়মন্ড জেতার দুর্দান্ত সুযোগ!</span></li>
+                </ul>
             </div>
         </div>
     </div>
 
+    <!-- ================= 3. BOOYAH STUDIO STORE PAGE ================= -->
+    <div id="booyah-studio-page" class="page">
+        <!-- Store Top Navbar -->
+        <header>
+            <button class="back-btn" onclick="openPage('landing-page')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="store-brand">
+                <i class="fa-solid fa-clapperboard" style="color: #00e676;"></i> BOOYAH STORE
+            </div>
+            <i class="fa-solid fa-magnifying-glass" style="color: #a0a5b5;"></i>
+        </header>
+
+        <div class="store-container">
+            <!-- Studio Logo and Details -->
+            <div class="app-header">
+                <img class="store-app-icon" style="border-color: #00e676;" src="https://pub-4c6b2dbf3a0c4862a8964b1546de6283.r2.dev/Free%20fire/1786667440925_file_000000004a1881fa963f9af266991b08.png" alt="BOOYAH STUDIO Logo">
+                <div>
+                    <h1 class="app-title">BOOYAH STUDIO</h1>
+                    <div class="developer-name">SZ DEV STUDIO</div>
+                    <div class="app-category" style="color: #00e676;"><i class="fa-solid fa-circle-check"></i> Creator & Monetization Hub</div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="app-stats">
+                <div class="stat-item">
+                    <div class="stat-value">5.0 <i class="fa-solid fa-star" style="font-size: 11px;"></i></div>
+                    <div class="stat-label">Rating</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">15 MB+</div>
+                    <div class="stat-label">Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">Creators</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">12+</div>
+                    <div class="stat-label">Age Rating</div>
+                </div>
+            </div>
+
+            <!-- Open Studio Button (UPDATED WITH NETLIFY LINK) -->
+            <a href="https://booyahstudio.netlify.app/" class="install-btn" target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Studio
+            </a>
+
+            <!-- About Section in Bangla for BOOYAH STUDIO -->
+            <div class="section-title" style="margin-top: 30px;">
+                <span>About BOOYAH STUDIO</span>
+            </div>
+            <div class="about-card">
+                <p class="about-text">
+                    <strong>BOOYAH STUDIO</strong> হলো কনটেন্ট ক্রিয়েটর, ভিডিও মেকার এবং গেমারদের জন্য বিশেষ মনিটাইজেশন প্ল্যাটফর্ম! এখানে ভিডিও আপলোড ও শেয়ার করে আপনি সরাসরি ইনকাম করতে পারবেন।
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-video" style="color: #00e676;"></i> <span><strong>ভিডিও আপলোড ও ফলোয়ার:</strong> আপনার চমৎকার গেমপ্লে ভিডিও আপলোড করুন, ফলোয়ার ও লাইক সংগ্রহ করুন।</span></li>
+                    <li><i class="fa-solid fa-money-bill-wave" style="color: #00e676;"></i> <span><strong>ভিডিও মনিটাইজেশন:</strong> নির্দিষ্ট ফলোয়ার ও লাইক পূরণ হলে মনিটাইজেশন অন করে ভিডিও থেকে রিয়েল টাকা আয় করুন।</span></li>
+                    <li><i class="fa-solid fa-gift" style="color: #00e676;"></i> <span><strong>ডায়মন্ড গিফট ইনকাম:</strong> আপনার ভিডিও ও লাইভ দেখে ভিউয়াররা আপনাকে সরাসরি রিয়েল ডায়মন্ড গিফট করতে পারবে।</span></li>
+                    <li><i class="fa-solid fa-chart-line" style="color: #00e676;"></i> <span><strong>ক্রিয়েটর ড্যাশবোর্ড:</strong> আপনার ভিডিও ভিউ, ইনকাম এবং ডায়মন্ড ব্যালেন্স সহজে ট্র্যাক করুন।</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to Handle Page Navigation -->
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAwhCQ6UN-xmI2xMKsT5V_11LrHCDYn4Yo",
-            authDomain: "booyahdaylive.firebaseapp.com",
-            projectId: "booyahdaylive",
-            storageBucket: "booyahdaylive.firebasestorage.app",
-            messagingSenderId: "607763134560",
-            appId: "1:607763134560:web:c35120fcef7e5877d1ab05"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        const WORKER_URL = "https://booyahhighlight.mdg145712.workers.dev";
-        let currentCreator = null;
-
-        // Flash Screen Loader
-        setTimeout(() => {
-            const flash = document.getElementById('flash-screen');
-            if (flash) {
-                flash.classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => flash.remove(), 500);
-            }
-        }, 1200);
-
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                try {
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    const uData = doc.data() || {};
-                    currentCreator = {
-                        uid: user.uid,
-                        email: user.email,
-                        nickname: uData.nickname || user.displayName || 'Gamer',
-                        avatar: uData.avatar || 'images/avatar/default_male.webp',
-                        badge: uData.badge || uData.equippedBadge || null,
-                        followers: uData.followers || uData.followersCount || 0
-                    };
-                    showStudioApp();
-                } catch(e) {
-                    currentCreator = { uid: user.uid, email: user.email, nickname: 'Gamer', avatar: 'images/avatar/default_male.webp', badge: null, followers: 0 };
-                    showStudioApp();
-                }
-            } else {
-                currentCreator = null;
-                document.getElementById('studio-login-screen').classList.remove('hidden');
-                document.getElementById('studio-main-app').classList.add('hidden');
-            }
-        });
-
-        async function handleStudioLogin(e) {
-            e.preventDefault();
-            const email = getVal('login-email');
-            const password = getVal('login-password');
-            const btn = document.getElementById('btn-studio-login');
-
-            btn.disabled = true;
-            btn.innerText = "AUTHENTICATING...";
-
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-            } catch(error) {
-                alert("লগইন ব্যর্থ হয়েছে! সঠিক ইমেইল ও পাসওয়ার্ড দিন।");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "VERIFY & ENTER STUDIO 🚀";
-            }
-        }
-
-        function logoutCreatorStudio() {
-            auth.signOut();
-        }
-
-        function showStudioApp() {
-            document.getElementById('studio-login-screen').classList.add('hidden');
-            document.getElementById('studio-main-app').classList.remove('hidden');
-            
-            // Header & Profile Data
-            document.getElementById('channel-name').innerText = currentCreator.nickname;
-            document.getElementById('settings-creator-name').innerText = currentCreator.nickname;
-            
-            // Render Badge if Creator has equipped badge
-            const badgeContainers = [document.getElementById('channel-badge-container'), document.getElementById('settings-badge-container')];
-            badgeContainers.forEach(container => {
-                if (container) {
-                    if (currentCreator.badge && currentCreator.badge !== 'none') {
-                        container.innerHTML = `<img src="${currentCreator.badge}" class="w-5 h-5 object-contain inline-block drop-shadow-md" title="Verified Badge">`;
-                    } else {
-                        container.innerHTML = '';
-                    }
-                }
+        function openPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
             });
-
-            document.getElementById('channel-followers-num').innerText = Number(currentCreator.followers || 0).toLocaleString();
-            document.getElementById('channel-avatar').src = currentCreator.avatar;
-            document.getElementById('header-creator-avatar').src = currentCreator.avatar;
-            document.getElementById('settings-creator-avatar').src = currentCreator.avatar;
-            
-            // Settings Tab Info
-            document.getElementById('setting-email').innerText = currentCreator.email;
-            document.getElementById('setting-uid').innerText = currentCreator.uid;
-
-            loadCreatorStudioEngine();
-        }
-
-        function getVal(id) {
-            const el = document.getElementById(id);
-            return el ? el.value.trim() : '';
-        }
-
-        function formatUploadDate(createdAt) {
-            if (!createdAt) return 'Recently';
-            try {
-                let dateObj;
-                if (createdAt.toDate) dateObj = createdAt.toDate();
-                else if (createdAt.seconds) dateObj = new Date(createdAt.seconds * 1000);
-                else dateObj = new Date(createdAt);
-                
-                if (isNaN(dateObj.getTime())) return 'Recently';
-                
-                return dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-            } catch(e) {
-                return 'Recently';
-            }
-        }
-
-        // Live Preview Handlers with Strict 1MB Check for Thumbnail & 20MB Check for Video
-        function previewThumbnail(input) {
-            if (input.files && input.files[0]) {
-                const f = input.files[0];
-
-                if (!f.type.startsWith('image/')) {
-                    alert("শুধুমাত্র ছবি (JPG/PNG/WebP) ফাইল নির্বাচন করুন!");
-                    input.value = '';
-                    document.getElementById('thumb-preview-img').classList.add('hidden');
-                    document.getElementById('thumb-label-text').innerText = "SELECT THUMBNAIL (MAX 1 MB)";
-                    return;
-                }
-
-                if (f.size > 1 * 1024 * 1024) { // 1 MB
-                    alert("থাম্বনেইল অবশ্যই ১ MB-র কম সাইজের ছবি হতে হবে!");
-                    input.value = '';
-                    document.getElementById('thumb-preview-img').classList.add('hidden');
-                    document.getElementById('thumb-label-text').innerText = "SELECT THUMBNAIL (MAX 1 MB)";
-                    return;
-                }
-
-                updateFileLabel(input, 'thumb-label-text');
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById('thumb-preview-img');
-                    img.src = e.target.result;
-                    img.classList.remove('hidden');
-                };
-                reader.readAsDataURL(f);
-            }
-        }
-
-        function previewEditThumbnail(input) {
-            if (input.files && input.files[0]) {
-                const f = input.files[0];
-
-                if (!f.type.startsWith('image/')) {
-                    alert("শুধুমাত্র ছবি (JPG/PNG/WebP) ফাইল নির্বাচন করুন!");
-                    input.value = '';
-                    document.getElementById('edit-thumb-preview-img').classList.add('hidden');
-                    document.getElementById('edit-thumb-label-text').innerText = "CHOOSE NEW IMAGE";
-                    return;
-                }
-
-                if (f.size > 1 * 1024 * 1024) { // 1 MB
-                    alert("থাম্বনেইল অবশ্যই ১ MB-র কম সাইজের ছবি হতে হবে!");
-                    input.value = '';
-                    document.getElementById('edit-thumb-preview-img').classList.add('hidden');
-                    document.getElementById('edit-thumb-label-text').innerText = "CHOOSE NEW IMAGE";
-                    return;
-                }
-
-                updateFileLabel(input, 'edit-thumb-label-text');
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById('edit-thumb-preview-img');
-                    img.src = e.target.result;
-                    img.classList.remove('hidden');
-                };
-                reader.readAsDataURL(f);
-            }
-        }
-
-        function previewVideoFile(input) {
-            if (input.files && input.files[0]) {
-                const f = input.files[0];
-
-                if (f.size > 20 * 1024 * 1024) { // 20 MB
-                    alert("২০ MB-র বড় ভিডিও আপলোড করা সম্ভব নয়!");
-                    input.value = '';
-                    document.getElementById('video-preview-el').classList.add('hidden');
-                    document.getElementById('video-label-text').innerText = "SELECT VIDEO FILE (MAX 20 MB)";
-                    return;
-                }
-
-                updateFileLabel(input, 'video-label-text');
-                const videoUrl = URL.createObjectURL(f);
-                const videoEl = document.getElementById('video-preview-el');
-                videoEl.src = videoUrl;
-                videoEl.classList.remove('hidden');
-            }
-        }
-
-        function updateFileLabel(input, labelId) {
-            const label = document.getElementById(labelId);
-            if (input.files && input.files[0]) {
-                const f = input.files[0];
-                const sizeMb = (f.size / (1024 * 1024)).toFixed(1);
-                label.innerText = `${f.name.substring(0, 15)}... (${sizeMb} MB)`;
-            }
-        }
-
-        function openUploadScreen() {
-            ['sec-dashboard', 'sec-content', 'sec-monetize', 'sec-settings'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            document.getElementById('sec-upload').classList.remove('hidden');
-        }
-
-        function closeUploadScreen() {
-            document.getElementById('sec-upload').classList.add('hidden');
-            switchStudioTab('dashboard');
-        }
-
-        function openUploadModal() {
-            openUploadScreen();
-        }
-
-        function closeUploadModal() {
-            closeUploadScreen();
-        }
-
-        function switchStudioTab(tab) {
-            ['dashboard', 'content', 'monetize', 'settings', 'upload'].forEach(t => {
-                const sec = document.getElementById('sec-' + t);
-                const btn = document.getElementById('nav-' + t);
-                if (sec) sec.classList.add('hidden');
-                if (btn) btn.className = "flex flex-col items-center gap-1 text-gray-400 hover:text-white transition";
-            });
-
-            const activeSec = document.getElementById('sec-' + tab);
-            const activeBtn = document.getElementById('nav-' + tab);
-
-            if (activeSec) activeSec.classList.remove('hidden');
-            if (activeBtn) activeBtn.className = "flex flex-col items-center gap-1 text-[#FF6B00] transition font-bold";
-        }
-
-        async function publishVideoToFirestore() {
-            const title = getVal('studio-title');
-            const privacy = document.getElementById('studio-privacy') ? document.getElementById('studio-privacy').value : 'public';
-            const fileInput = document.getElementById('studio-file-input');
-            const thumbInput = document.getElementById('studio-thumb-input');
-
-            const file = fileInput ? fileInput.files[0] : null;
-            const thumbnail = thumbInput ? thumbInput.files[0] : null;
-
-            const btn = document.getElementById('btn-studio-publish');
-            const progBox = document.getElementById('studio-progress-box');
-
-            if (!title) return alert("ভিডিওর টাইটেল দিন!");
-            if (!file) return alert("ভিডিও ফাইল সিলেক্ট করুন!");
-            if (!thumbnail) return alert("থাম্বনেইল ইমেজ সিলেক্ট করুন!");
-
-            if (!thumbnail.type.startsWith('image/') || thumbnail.size > 1 * 1024 * 1024) {
-                return alert("থাম্বনেইল অবশ্যই ১ MB-র কম সাইজের ছবি হতে হবে!");
-            }
-
-            const sizeMb = file.size / (1024 * 1024);
-            if (sizeMb > 20) {
-                return alert("২০ MB-র বড় ভিডিও আপলোড করা সম্ভব নয়!");
-            }
-
-            btn.disabled = true;
-            btn.innerText = "UPLOADING VIDEO...";
-            progBox.classList.remove('hidden');
-
-            const endpoint = `${WORKER_URL}/upload`;
-
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("thumbnail", thumbnail);
-            formData.append("uploader_uid", currentCreator.uid);
-            formData.append("title", title);
-            formData.append("privacy", privacy);
-            formData.append("tags", "");
-            formData.append("category", "Gaming");
-
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", endpoint, true);
-
-            xhr.upload.onprogress = function(e) {
-                if (e.lengthComputable) {
-                    const pct = Math.min(92, Math.round((e.loaded / e.total) * 92));
-                    document.getElementById('studio-pct-text').innerText = pct + "%";
-                    document.getElementById('studio-progress-bar').style.width = pct + "%";
-                    if (pct >= 90) {
-                        const statusTxt = document.getElementById('studio-status-text');
-                        if (statusTxt) statusTxt.innerText = "PROCESSING ON SERVER (TELEGRAM)...";
-                    }
-                }
-            };
-
-            xhr.onload = async function() {
-                document.getElementById('studio-pct-text').innerText = "100%";
-                document.getElementById('studio-progress-bar').style.width = "100%";
-
-                if (xhr.status === 200) {
-                    let data;
-                    try {
-                        data = JSON.parse(xhr.responseText);
-                    } catch(e) {
-                        alert("Server Response Error: " + xhr.responseText);
-                        resetPublishButton();
-                        return;
-                    }
-
-                    if (data.success && data.video_url) {
-                        const videoId = data.video_id || ("vid_" + Date.now());
-                        await db.collection('videos').doc(videoId).set({
-                            id: videoId,
-                            title: title,
-                            privacy: privacy,
-                            tags: "",
-                            category: "Gaming",
-                            videoUrl: data.video_url,
-                            thumbnailUrl: data.thumbnail_url || "",
-                            fileSize: sizeMb,
-                            uploaderUid: currentCreator.uid,
-                            uploaderName: currentCreator.nickname,
-                            uploaderAvatar: currentCreator.avatar,
-                            viewsCount: 0,
-                            likesCount: 0,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-
-                        alert("🎉 ভিডিও সফলভাবে পাবলিশ হয়েছে!");
-                        document.getElementById('studio-title').value = '';
-                        fileInput.value = '';
-                        thumbInput.value = '';
-                        document.getElementById('video-label-text').innerText = "CLICK TO SELECT VIDEO FILE (MAX 20 MB)";
-                        document.getElementById('thumb-label-text').innerText = "SELECT THUMBNAIL (MAX 1 MB)";
-                        document.getElementById('thumb-preview-img').classList.add('hidden');
-                        document.getElementById('video-preview-el').classList.add('hidden');
-                        
-                        closeUploadScreen();
-                        switchStudioTab('dashboard');
-                    } else {
-                        alert("Upload Failed: " + (data.error || "Unknown Error"));
-                    }
-                } else {
-                    alert("Upload Server Error Status: " + xhr.status);
-                }
-                resetPublishButton();
-            };
-
-            xhr.onerror = function() {
-                alert("Network Error during upload.");
-                resetPublishButton();
-            };
-
-            xhr.send(formData);
-        }
-
-        function resetPublishButton() {
-            const btn = document.getElementById('btn-studio-publish');
-            const progBox = document.getElementById('studio-progress-box');
-            if (btn) {
-                btn.disabled = false;
-                btn.innerText = "PUBLISH TO APP 🚀";
-            }
-            if (progBox) progBox.classList.add('hidden');
-        }
-
-        // Dynamic Video-Specific RPM Calculation Engine
-        function getVideoRpmRates(videoId) {
-            let hash = 0;
-            const str = videoId || 'vid_0';
-            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            hash = Math.abs(hash);
-
-            // Per 1k views: ৳3.00 - ৳5.00 (e.g. ৳3.45, ৳4.20)
-            const viewRate1k = 3.0 + (hash % 200) / 100;
-            // Per 1k likes: ৳7.00 - ৳10.00 (e.g. ৳7.80, ৳9.50)
-            const likeRate1k = 7.0 + (hash % 300) / 100;
-
-            return {
-                perView: viewRate1k / 1000,
-                perLike: likeRate1k / 1000,
-                viewRate1k: viewRate1k,
-                likeRate1k: likeRate1k
-            };
-        }
-
-        function loadCreatorStudioEngine() {
-            if (!currentCreator) return;
-
-            // Real-time Listener for Creator's Videos from Cloud Firestore
-            db.collection('videos')
-              .where('uploaderUid', '==', currentCreator.uid)
-              .onSnapshot(snap => {
-                document.getElementById('content-video-count').innerText = snap.size;
-
-                const videoDocs = [];
-                snap.forEach(doc => {
-                    videoDocs.push({ id: doc.id, ...doc.data() });
-                });
-
-                // Listen to video_stats for real-time views & likes sync in Studio
-                let statsMap = new Map();
-
-                const updateStudioStatsUI = () => {
-                    let totalViewsSum = 0;
-                    let totalLikesSum = 0;
-                    let totalEarningSum = 0;
-
-                    videoDocs.forEach(item => {
-                        const stat = statsMap.get(item.id) || {};
-                        item.realViews = (stat.views !== undefined) ? stat.views : (item.viewsCount || item.views || 0);
-                        item.realLikes = (stat.likes !== undefined) ? stat.likes : (item.likesCount || item.likes || 0);
-
-                        // Dynamic RPM Calculation
-                        const rpm = getVideoRpmRates(item.id);
-                        item.calculatedEarning = (item.realViews * rpm.perView) + (item.realLikes * rpm.perLike);
-
-                        totalViewsSum += item.realViews;
-                        totalLikesSum += item.realLikes;
-                        totalEarningSum += item.calculatedEarning;
-                    });
-
-                    // Update Channel Analytics Cards (All Time)
-                    document.getElementById('stat-total-views').innerText = totalViewsSum.toLocaleString();
-                    document.getElementById('stat-total-likes').innerText = totalLikesSum.toLocaleString();
-
-                    // Check Creator Monetization Eligibility (150 Followers + 50 Likes)
-                    const currentFollowers = Number(currentCreator.followers || 0);
-                    const isMonetizedUnlocked = (currentFollowers >= 150 && totalLikesSum >= 50);
-                    currentCreator.isMonetized = isMonetizedUnlocked;
-
-                    updateMonetizationUI(isMonetizedUnlocked, currentFollowers, totalLikesSum, totalEarningSum, videoDocs);
-
-                    renderDashboardViralContent(videoDocs);
-                    renderContentTabList(videoDocs);
-                };
-
-                if (videoDocs.length === 0) {
-                    updateStudioStatsUI();
-                    return;
-                }
-
-                // Realtime Sync for Views & Likes per Video
-                videoDocs.forEach(item => {
-                    db.collection('video_stats').doc(item.id).onSnapshot(sDoc => {
-                        if (sDoc.exists) {
-                            statsMap.set(item.id, sDoc.data());
-                        } else {
-                            statsMap.set(item.id, { views: item.viewsCount || 0, likes: item.likesCount || 0 });
-                        }
-                        updateStudioStatsUI();
-                    });
-                });
-
-                updateStudioStatsUI();
-              });
-        }
-
-        function updateMonetizationUI(unlocked, currentFollowers, totalLikes, totalEarning, videoDocs) {
-            const lockedView = document.getElementById('monetize-locked-view');
-            const unlockedView = document.getElementById('monetize-unlocked-view');
-            const settingStatus = document.getElementById('setting-monetize-status');
-
-            if (unlocked) {
-                if (lockedView) lockedView.classList.add('hidden');
-                if (unlockedView) unlockedView.classList.remove('hidden');
-                if (settingStatus) {
-                    settingStatus.innerText = "ACTIVE ✓";
-                    settingStatus.className = "text-emerald-400 font-bold uppercase";
-                }
-
-                // Estimate Today & 3 Days
-                const todayEarning = totalEarning * 0.15;
-                const last3DaysEarning = totalEarning * 0.45;
-
-                document.getElementById('earning-today').innerText = `৳${todayEarning.toFixed(2)}`;
-                document.getElementById('earning-3days').innerText = `৳${last3DaysEarning.toFixed(2)}`;
-                document.getElementById('earning-total').innerText = `৳${totalEarning.toFixed(2)}`;
-
-                renderMonetizeTopEarningVideos(videoDocs);
-
-            } else {
-                if (unlockedView) unlockedView.classList.add('hidden');
-                if (lockedView) lockedView.classList.remove('hidden');
-                if (settingStatus) {
-                    settingStatus.innerText = "LOCKED 🔒";
-                    settingStatus.className = "text-red-500 font-bold uppercase";
-                }
-
-                // Update Requirements Progress Bars
-                const folPct = Math.min(100, Math.round((currentFollowers / 150) * 100));
-                const likePct = Math.min(100, Math.round((totalLikes / 50) * 100));
-
-                const folText = document.getElementById('req-followers-text');
-                const folBar = document.getElementById('req-followers-bar');
-                if (folText) folText.innerText = `${currentFollowers} / 150`;
-                if (folBar) folBar.style.width = `${folPct}%`;
-
-                const likeText = document.getElementById('req-likes-text');
-                const likeBar = document.getElementById('req-likes-bar');
-                if (likeText) likeText.innerText = `${totalLikes} / 50`;
-                if (likeBar) likeBar.style.width = `${likePct}%`;
-            }
-        }
-
-        function renderMonetizeTopEarningVideos(videos) {
-            const container = document.getElementById('monetize-top-earning-container');
-            if (!container) return;
-
-            if (videos.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-xs text-gray-500 font-bold uppercase">No videos yet.</div>`;
-                return;
-            }
-
-            // Sort by calculated earnings desc
-            const sorted = [...videos].sort((a, b) => (b.calculatedEarning || 0) - (a.calculatedEarning || 0)).slice(0, 3);
-
-            let html = '';
-            sorted.forEach(item => {
-                const poster = (item.thumbnailUrl && item.thumbnailUrl.startsWith('http')) ? item.thumbnailUrl : '';
-                const videoFrameUrl = (item.videoUrl || '').includes('#t=') ? item.videoUrl : `${item.videoUrl}#t=0.5`;
-                const earningVal = (item.calculatedEarning || 0).toFixed(4);
-
-                const mediaHtml = poster ? 
-                    `<img src="${poster}" class="w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black" onerror="this.outerHTML='<video src=\\'${videoFrameUrl}\\' preload=\\'metadata\\' class=\\'w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black\\'></video>'">` :
-                    `<video src="${videoFrameUrl}" preload="metadata" class="w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black"></video>`;
-
-                html += `
-                <div class="card-bg border card-border p-3.5 rounded-2xl flex flex-col gap-2.5 shadow-md">
-                    <div class="flex items-center gap-3 min-w-0 w-full">
-                        ${mediaHtml}
-                        <div class="flex flex-col min-w-0 flex-1 text-left">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="text-xs font-black text-white uppercase truncate flex-1">${item.title}</span>
-                                <div class="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full shadow-sm shrink-0">
-                                    <span class="font-mono font-black text-[9px]">$ ON</span>
-                                </div>
-                            </div>
-                            <span class="text-xs font-mono font-black text-emerald-400 mt-1.5">Earning: ৳${earningVal}</span>
-                        </div>
-                    </div>
-                </div>`;
-            });
-
-            container.innerHTML = html;
-        }
-
-        function renderDashboardViralContent(videos) {
-            const container = document.getElementById('dashboard-viral-container');
-            if (!container) return;
-
-            if (videos.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-xs text-gray-500 font-bold uppercase">No videos yet.</div>`;
-                return;
-            }
-
-            // Sort by real views desc for top 3 viral list
-            const sorted = [...videos].sort((a, b) => (b.realViews || 0) - (a.realViews || 0)).slice(0, 3);
-            const isMonetized = currentCreator ? (currentCreator.isMonetized === true) : false;
-
-            let html = '';
-            sorted.forEach(item => {
-                const poster = (item.thumbnailUrl && item.thumbnailUrl.startsWith('http')) ? item.thumbnailUrl : '';
-                const videoFrameUrl = (item.videoUrl || '').includes('#t=') ? item.videoUrl : `${item.videoUrl}#t=0.5`;
-                const uploadDateStr = formatUploadDate(item.createdAt);
-
-                const mediaHtml = poster ? 
-                    `<img src="${poster}" class="w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black" onerror="this.outerHTML='<video src=\\'${videoFrameUrl}\\' preload=\\'metadata\\' class=\\'w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black\\'></video>'">` :
-                    `<video src="${videoFrameUrl}" preload="metadata" class="w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black"></video>`;
-
-                const monetizeBadge = isMonetized ? 
-                    `<div class="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full shadow-sm shrink-0"><span class="font-mono font-black text-[9px]">$ ON</span></div>` :
-                    `<div class="flex items-center gap-1 bg-red-500/20 text-red-500 border border-red-500/40 px-2 py-0.5 rounded-full shadow-sm shrink-0"><span class="font-mono font-black text-[9px]">$ OFF</span></div>`;
-
-                html += `
-                <div class="card-bg border card-border p-3.5 rounded-2xl flex flex-col gap-2.5 shadow-md">
-                    <div class="flex items-center gap-3 min-w-0 w-full">
-                        ${mediaHtml}
-                        <div class="flex flex-col min-w-0 flex-1 text-left">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="text-xs font-black text-white uppercase truncate flex-1">${item.title}</span>
-                                ${monetizeBadge}
-                            </div>
-                            <span class="text-[10px] font-mono font-bold text-gray-400 mt-1">${uploadDateStr}</span>
-                        </div>
-                    </div>
-
-                    <!-- Line Divider & Bottom Stats Row -->
-                    <div class="flex items-center justify-between pt-2 border-t border-gray-800/80 text-[11px] font-bold font-mono text-gray-300 w-full">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-gray-400">👁️ Views:</span>
-                            <span class="text-white font-black">${item.realViews || 0}</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-gray-400">❤️ Likes:</span>
-                            <span class="text-[#FF6B00] font-black">${item.realLikes || 0}</span>
-                        </div>
-                    </div>
-                </div>`;
-            });
-
-            container.innerHTML = html;
-        }
-
-        function renderContentTabList(videos) {
-            const container = document.getElementById('content-videos-list');
-            if (!container) return;
-
-            if (videos.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-gray-500 font-bold text-xs uppercase">আপনার কোনো আপলোড করা ভিডিও পাওয়া যায়নি।</div>`;
-                return;
-            }
-
-            const isMonetized = currentCreator ? (currentCreator.isMonetized === true) : false;
-            let html = '';
-
-            videos.forEach(item => {
-                const poster = (item.thumbnailUrl && item.thumbnailUrl.startsWith('http')) ? item.thumbnailUrl : '';
-                const videoFrameUrl = (item.videoUrl || '').includes('#t=') ? item.videoUrl : `${item.videoUrl}#t=0.5`;
-                const uploadDateStr = formatUploadDate(item.createdAt);
-
-                const mediaHtml = poster ? 
-                    `<img src="${poster}" class="w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black" onerror="this.outerHTML='<video src=\\'${videoFrameUrl}\\' preload=\\'metadata\\' class=\\'w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black\\'></video>'">` :
-                    `<video src="${videoFrameUrl}" preload="metadata" class="w-24 h-16 object-contain rounded-xl border border-gray-700 shrink-0 bg-black"></video>`;
-
-                const monetizeBadge = isMonetized ? 
-                    `<div class="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full shadow-sm shrink-0"><span class="font-mono font-black text-[9px]">$ ON</span></div>` :
-                    `<div class="flex items-center gap-1 bg-red-500/20 text-red-500 border border-red-500/40 px-2 py-0.5 rounded-full shadow-sm shrink-0"><span class="font-mono font-black text-[9px]">$ OFF</span></div>`;
-
-                html += `
-                <div class="card-bg border card-border p-3.5 rounded-2xl flex flex-col gap-3 shadow-lg">
-                    <div class="flex items-start justify-between gap-3 w-full">
-                        <div class="flex items-center gap-3 min-w-0 flex-1">
-                            ${mediaHtml}
-                            <div class="flex flex-col min-w-0 flex-1 text-left">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="text-xs font-black text-white uppercase truncate flex-1">${item.title}</span>
-                                    ${monetizeBadge}
-                                </div>
-                                <span class="text-[10px] font-mono font-bold text-gray-400 mt-1 truncate">${uploadDateStr}</span>
-                            </div>
-                        </div>
-
-                        <!-- Premium Edit & Delete Buttons -->
-                        <div class="flex items-center gap-1.5 shrink-0">
-                            <button onclick="openEditModal('${item.id}')" class="px-3 py-1.5 bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/40 font-black text-[10px] uppercase rounded-xl shadow active:scale-95 transition flex items-center gap-1">
-                                ✏️ EDIT
-                            </button>
-                            <button onclick="deleteFirestoreVideo('${item.id}')" class="px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-500/40 font-black text-[10px] uppercase rounded-xl active:scale-95 transition flex items-center justify-center shadow">
-                                🗑️
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Line Divider & Bottom Stats Row -->
-                    <div class="flex items-center justify-between pt-2 border-t border-gray-800/80 text-[11px] font-bold font-mono text-gray-300 w-full">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-gray-400">👁️ Views:</span>
-                            <span class="text-white font-black">${item.realViews || 0}</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-gray-400">❤️ Likes:</span>
-                            <span class="text-[#FF6B00] font-black">${item.realLikes || 0}</span>
-                        </div>
-                    </div>
-                </div>`;
-            });
-
-            container.innerHTML = html;
-        }
-
-        function openEditModal(videoId) {
-            db.collection('videos').doc(videoId).get().then(doc => {
-                if(doc.exists) {
-                    const item = doc.data();
-                    document.getElementById('edit-video-id').value = item.id;
-                    document.getElementById('edit-title').value = item.title;
-                    document.getElementById('edit-thumb-label-text').innerText = "CHOOSE NEW IMAGE";
-                    
-                    const editPreview = document.getElementById('edit-thumb-preview-img');
-                    if (item.thumbnailUrl) {
-                        editPreview.src = item.thumbnailUrl;
-                        editPreview.classList.remove('hidden');
-                    } else {
-                        editPreview.classList.add('hidden');
-                    }
-
-                    document.getElementById('modal-edit-video').classList.remove('hidden');
-                }
-            });
-        }
-
-        function closeEditModal() {
-            document.getElementById('modal-edit-video').classList.add('hidden');
-        }
-
-        async function saveVideoEdits() {
-            const videoId = getVal('edit-video-id');
-            const title = getVal('edit-title');
-            const thumbInput = document.getElementById('edit-thumb-input');
-            const btn = document.getElementById('btn-save-edit');
-
-            if (!title) return alert("টাইটেল লিখুন!");
-
-            btn.disabled = true;
-            btn.innerText = "SAVING...";
-
-            const formData = new FormData();
-            formData.append("video_id", videoId);
-            formData.append("title", title);
-            formData.append("category", "Gaming");
-            formData.append("tags", "");
-            if (thumbInput && thumbInput.files && thumbInput.files[0]) {
-                formData.append("thumbnail", thumbInput.files[0]);
-            }
-
-            try {
-                const res = await fetch(`${WORKER_URL}/edit-video`, {
-                    method: "POST",
-                    body: formData
-                });
-                const data = await res.json();
-                if (data.success) {
-                    const updateObj = {
-                        title: title
-                    };
-                    if (data.thumbnail_url && data.thumbnail_url.length > 5) {
-                        updateObj.thumbnailUrl = data.thumbnail_url;
-                    }
-                    await db.collection('videos').doc(videoId).update(updateObj);
-
-                    alert("🎉 ভিডিও এবং থাম্বনেইল সফলভাবে আপডেট হয়েছে!");
-                    closeEditModal();
-                } else {
-                    alert("Update Failed: " + (data.error || "Unknown Error"));
-                }
-            } catch(e) {
-                alert("Error updating video.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "SAVE CHANGES";
-            }
-        }
-
-        async function deleteFirestoreVideo(videoId) {
-            if (!confirm("আপনি কি নিশ্চিত যে এই ভিডিওটি ডিলিট করতে চান? (এটি আর২ ও ডি১ থেকেও ভিডিও মুছে দেবে)")) return;
-            try {
-                const res = await fetch(`${WORKER_URL}/delete`, {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ video_id: videoId })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    await db.collection('videos').doc(videoId).delete();
-                    alert("ভিডিও সম্পূর্ণ ডিলিট করা হয়েছে!");
-                } else {
-                    alert("Delete failed: " + data.error);
-                }
-            } catch(e) {
-                alert("Error deleting video.");
-            }
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
         }
     </script>
 </body>
